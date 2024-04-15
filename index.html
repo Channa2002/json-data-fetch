@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Data Fetch</title>
+    <style>
+         .content-data {
+            display: flex;
+            padding: 10px;
+            margin: 20px;
+            border: 1px solid red;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <input id="values" type="text" placeholder="enter the product">
+        <button onclick="search()">search</button>
+        <br>
+        <br>
+        <div id="info" class="details">
+    </div>
+
+    <script>
+        async function getproduct() {
+            let res = await fetch(`https://dummyjson.com/products`);
+            let result = await res.json();
+            document.getElementById("info").innerHTML = "";
+           result.products.forEach(element => {
+            document.getElementById("info").innerHTML += `
+            <div class="content-data">
+            <p>description:${element.description} </p>
+            <p>price:${element.price} </p>
+            <p>rating:${element.rating} </p>
+            </div>
+            `
+        });
+    }
+    getproduct();
+
+        async function search(){
+            let values= document.getElementById("values").value
+            let res = await fetch(`https://dummyjson.com/products/search?q=${values.trim()}`);
+            let result = await res.json();
+            document.getElementById("info").innerHTML = "";
+            result.products.forEach(element => {
+            document.getElementById("info").innerHTML += `
+            <div class="content-data">
+            <p>description:${element.description} </p>
+            <p>price:${element.price} </p>
+            <p>rating:${element.rating} </p>
+            </div>
+            `
+           });
+           
+           if (result.products.length === 0) {
+            document.getElementById("info").innerHTML = `
+               <p>No Products Found </p>
+            `
+            }
+        }
+    </script>
+</body>
+</html>
